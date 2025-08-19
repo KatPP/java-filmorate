@@ -10,7 +10,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Контроллер для работы с пользователями
+ * REST API для создания, обновления и получения пользователей
+ */
 @Slf4j
 @RestController
 @RequestMapping("/users")
@@ -18,7 +21,13 @@ public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
 
-    // Создание пользователя
+    /**
+     * Создание нового пользователя
+     *
+     * @param user объект пользователя для создания
+     * @return созданный пользователь с присвоенным ID
+     * @throws ValidationException если пользователь не прошел валидацию
+     */
     @PostMapping
     public User createUser(@RequestBody User user) throws ValidationException {
         log.info("Получен запрос на создание пользователя: {}", user.getLogin());
@@ -36,7 +45,13 @@ public class UserController {
         return user;
     }
 
-    // Обновление пользователя
+    /**
+     * Обновление существующего пользователя
+     *
+     * @param user объект пользователя с обновленными данными
+     * @return обновленный пользователь
+     * @throws ValidationException если пользователь не найден или не прошел валидацию
+     */
     @PutMapping
     public User updateUser(@RequestBody User user) throws ValidationException {
         log.info("Получен запрос на обновление пользователя с id: {}", user.getId());
@@ -50,7 +65,7 @@ public class UserController {
         // Проверка существования пользователя
         if (!users.containsKey(user.getId())) {
             log.error("Ошибка обновления пользователя: Пользователь с id = {} не найден", user.getId());
-            throw new ValidationException("Пользователь с id = " + user.getId() + " не найден");
+            throw new ValidationException(String.format("Пользователь с id = %d не найден", user.getId()));
         }
 
         // Валидация
@@ -67,14 +82,24 @@ public class UserController {
         return user;
     }
 
-    // Получение всех пользователей
+    /**
+     * Получение всех пользователей
+     *
+     * @return коллекция всех пользователей
+     */
     @GetMapping
     public Collection<User> getAllUsers() {
         log.info("Получен запрос на получение всех пользователей. Количество пользователей: {}", users.size());
         return users.values();
     }
 
-    // Валидация пользователя
+    /**
+     * Валидация пользователя
+     * Проверяет корректность всех полей пользователя
+     *
+     * @param user пользователь для валидации
+     * @throws ValidationException если пользователь не прошел валидацию
+     */
     private void validateUser(User user) throws ValidationException {
         // Проверка email
         if (user.getEmail() == null || user.getEmail().isBlank()) {
@@ -107,7 +132,11 @@ public class UserController {
         }
     }
 
-    // Метод для генерации следующего ID
+    /**
+     * Метод для генерации следующего уникального ID
+     *
+     * @return следующий доступный ID
+     */
     private int getNextId() {
         return users.keySet()
                 .stream()

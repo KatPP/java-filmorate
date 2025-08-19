@@ -1,36 +1,41 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
+
+import static lombok.AccessLevel.PRIVATE;
 
 /**
  * Модель фильма.
  * Содержит информацию о фильме: идентификатор, название, описание, дату релиза и продолжительность.
  */
 @Data
+@FieldDefaults(level = PRIVATE)
 public class Film {
     /**
      * Уникальный идентификатор фильма.
      */
-    private Integer id;
+    Integer id;
 
     /**
      * Название фильма.
      */
-    private String name;
+    String name;
 
     /**
      * Описание фильма.
      */
-    private String description;
+    String description;
 
     /**
      * Дата релиза фильма.
      */
-    private LocalDate releaseDate;
+    LocalDate releaseDate;
 
     /**
      * Продолжительность фильма в минутах.
      */
-    private Integer duration;
+    Integer duration;
 }

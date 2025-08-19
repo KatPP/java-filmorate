@@ -1,36 +1,41 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
 import java.time.LocalDate;
+
+import static lombok.AccessLevel.PRIVATE;
 
 /**
  * Модель пользователя.
  * Содержит информацию о пользователе: идентификатор, email, логин, имя и дату рождения.
  */
 @Data
+@FieldDefaults(level = PRIVATE)
 public class User {
     /**
      * Уникальный идентификатор пользователя.
      */
-    private Integer id;
+    Integer id;
 
     /**
      * Электронная почта пользователя.
      */
-    private String email;
+    String email;
 
     /**
      * Логин пользователя.
      */
-    private String login;
+    String login;
 
     /**
      * Имя пользователя для отображения.
      */
-    private String name;
+    String name;
 
     /**
      * Дата рождения пользователя.
      */
-    private LocalDate birthday;
+    LocalDate birthday;
 }

@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
 
+/**
+ * Контроллер для работы с фильмами
+ * REST API для создания, обновления и получения фильмов
+ */
 @Slf4j
 @RestController
 @RequestMapping("/films")
@@ -16,7 +20,12 @@ public class FilmController {
 
     private final Map<Integer, Film> films = new HashMap<>();
 
-    // Создание фильма
+    /**
+     * Создание нового фильма
+     * @param film объект фильма для создания
+     * @return созданный фильм с присвоенным ID
+     * @throws ValidationException если фильм не прошел валидацию
+     */
     @PostMapping
     public Film createFilm(@RequestBody Film film) throws ValidationException {
         log.info("Получен запрос на создание фильма: {}", film.getName());
@@ -33,7 +42,12 @@ public class FilmController {
         }
     }
 
-    // Обновление фильма
+    /**
+     * Обновление существующего фильма
+     * @param film объект фильма с обновленными данными
+     * @return обновленный фильм
+     * @throws ValidationException если фильм не найден или не прошел валидацию
+     */
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws ValidationException {
         log.info("Получен запрос на обновление фильма с id: {}", film.getId());
@@ -47,7 +61,7 @@ public class FilmController {
         // Проверка существования фильма
         if (!films.containsKey(film.getId())) {
             log.error("Ошибка обновления фильма: Фильм с id = {} не найден", film.getId());
-            throw new ValidationException("Фильм с id = " + film.getId() + " не найден");
+            throw new ValidationException(String.format("Фильм с id = %d не найден", film.getId()));
         }
 
         // Валидация
@@ -59,14 +73,22 @@ public class FilmController {
         return film;
     }
 
-    // Получение всех фильмов
+    /**
+     * Получение всех фильмов
+     * @return коллекция всех фильмов
+     */
     @GetMapping
     public Collection<Film> getAllFilms() {
         log.info("Получен запрос на получение всех фильмов. Количество фильмов: {}", films.size());
         return films.values();
     }
 
-    // Валидация фильма
+    /**
+     * Валидация фильма
+     * Проверяет корректность всех полей фильма
+     * @param film фильм для валидации
+     * @throws ValidationException если фильм не прошел валидацию
+     */
     private void validateFilm(Film film) throws ValidationException {
         // Проверка названия
         if (film.getName() == null || film.getName().isBlank()) {
@@ -93,7 +115,10 @@ public class FilmController {
         }
     }
 
-    // Метод для генерации следующего ID
+    /**
+     * Метод для генерации следующего уникального ID
+     * @return следующий доступный ID
+     */
     private int getNextId() {
         return films.keySet()
                 .stream()
