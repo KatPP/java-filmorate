@@ -26,6 +26,7 @@ public class FilmController {
 
     /**
      * Создание нового фильма
+     *
      * @param film объект фильма для создания
      * @return созданный фильм с присвоенным ID
      * @throws ValidationException если фильм не прошел валидацию
@@ -38,6 +39,7 @@ public class FilmController {
 
     /**
      * Обновление существующего фильма
+     *
      * @param film объект фильма с обновленными данными
      * @return обновленный фильм
      * @throws ValidationException если фильм не найден или не прошел валидацию
@@ -50,6 +52,7 @@ public class FilmController {
 
     /**
      * Получение всех фильмов
+     *
      * @return коллекция всех фильмов
      */
     @GetMapping
@@ -60,6 +63,7 @@ public class FilmController {
 
     /**
      * Получение фильма по ID
+     *
      * @param id идентификатор фильма
      * @return фильм
      */
@@ -77,6 +81,7 @@ public class FilmController {
 
     /**
      * Удаление фильма по ID
+     *
      * @param id идентификатор фильма для удаления
      * @return статус 204 No Content при успешном удалении
      */
@@ -93,7 +98,8 @@ public class FilmController {
 
     /**
      * Добавление лайка фильму
-     * @param id идентификатор фильма
+     *
+     * @param id     идентификатор фильма
      * @param userId идентификатор пользователя
      */
     @PutMapping("/{id}/like/{userId}")
@@ -104,7 +110,8 @@ public class FilmController {
 
     /**
      * Удаление лайка у фильма
-     * @param id идентификатор фильма
+     *
+     * @param id     идентификатор фильма
      * @param userId идентификатор пользователя
      */
     @DeleteMapping("/{id}/like/{userId}")
@@ -115,6 +122,7 @@ public class FilmController {
 
     /**
      * Получение популярных фильмов
+     *
      * @param count количество фильмов (по умолчанию 10)
      * @return список популярных фильмов
      */

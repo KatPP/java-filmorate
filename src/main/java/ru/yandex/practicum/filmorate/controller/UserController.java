@@ -26,6 +26,7 @@ public class UserController {
 
     /**
      * Создание нового пользователя
+     *
      * @param user объект пользователя для создания
      * @return созданный пользователь с присвоенным ID
      * @throws ValidationException если пользователь не прошел валидацию
@@ -38,6 +39,7 @@ public class UserController {
 
     /**
      * Обновление существующего пользователя
+     *
      * @param user объект пользователя с обновленными данными
      * @return обновленный пользователь
      * @throws ValidationException если пользователь не найден или не прошел валидацию
@@ -50,6 +52,7 @@ public class UserController {
 
     /**
      * Получение всех пользователей
+     *
      * @return коллекция всех пользователей
      */
     @GetMapping
@@ -60,6 +63,7 @@ public class UserController {
 
     /**
      * Получение пользователя по ID
+     *
      * @param id идентификатор пользователя
      * @return пользователь
      */
@@ -77,6 +81,7 @@ public class UserController {
 
     /**
      * Удаление пользователя по ID
+     *
      * @param id идентификатор пользователя для удаления
      * @return статус 204 No Content при успешном удалении
      */
@@ -93,7 +98,8 @@ public class UserController {
 
     /**
      * Добавление в друзья
-     * @param id идентификатор пользователя
+     *
+     * @param id       идентификатор пользователя
      * @param friendId идентификатор друга
      */
     @PutMapping("/{id}/friends/{friendId}")
@@ -104,7 +110,8 @@ public class UserController {
 
     /**
      * Удаление из друзей
-     * @param id идентификатор пользователя
+     *
+     * @param id       идентификатор пользователя
      * @param friendId идентификатор друга
      */
     @DeleteMapping("/{id}/friends/{friendId}")
@@ -115,6 +122,7 @@ public class UserController {
 
     /**
      * Получение списка друзей пользователя
+     *
      * @param id идентификатор пользователя
      * @return список друзей
      */
@@ -126,7 +134,8 @@ public class UserController {
 
     /**
      * Получение списка общих друзей
-     * @param id идентификатор пользователя
+     *
+     * @param id      идентификатор пользователя
      * @param otherId идентификатор другого пользователя
      * @return список общих друзей
      */

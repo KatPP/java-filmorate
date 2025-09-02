@@ -133,6 +133,7 @@ public class SimpleFilmService implements FilmService {
     /**
      * Валидация фильма
      * Проверяет корректность всех полей фильма
+     *
      * @param film фильм для валидации
      * @throws ValidationException если фильм не прошел валидацию
      */
