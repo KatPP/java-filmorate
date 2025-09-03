@@ -87,9 +87,9 @@ public class SimpleFilmService implements FilmService {
         log.info("Добавление лайка фильму {} от пользователя {}", filmId, userId);
 
         Film film = filmRepository.findById(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Фильм с id = %d не найден", filmId)));
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
 
         film.getLikes().add(userId);
@@ -103,11 +103,11 @@ public class SimpleFilmService implements FilmService {
         log.info("Удаление лайка у фильма {} от пользователя {}", filmId, userId);
 
         Film film = filmRepository.findById(filmId)
-                .orElseThrow(() -> new NotFoundException("Фильм с id = " + filmId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Фильм с id = %d не найден", filmId)));
 
         // Проверяем, существует ли пользователь
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
 
         film.getLikes().remove(userId);

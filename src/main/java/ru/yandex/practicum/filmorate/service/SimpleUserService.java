@@ -96,9 +96,9 @@ public class SimpleUserService implements UserService {
         log.info("Добавление пользователя {} в друзья к пользователю {}", friendId, userId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", userId)));
         User friend = userRepository.findById(friendId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + friendId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", friendId)));
 
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
@@ -114,9 +114,9 @@ public class SimpleUserService implements UserService {
         log.info("Удаление пользователя {} из друзей пользователя {}", friendId, userId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", userId)));
         User friend = userRepository.findById(friendId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + friendId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", friendId)));
 
         user.getFriends().remove(friendId);
         friend.getFriends().remove(userId);
@@ -132,7 +132,7 @@ public class SimpleUserService implements UserService {
         log.info("Получение списка друзей пользователя с id: {}", userId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", userId)));
 
         return user.getFriends().stream()
                 .map(userRepository::findById)
@@ -146,9 +146,9 @@ public class SimpleUserService implements UserService {
         log.info("Получение общих друзей пользователей {} и {}", userId, otherUserId);
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", userId)));
         User otherUser = userRepository.findById(otherUserId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + otherUserId + " не найден"));
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с id = %d не найден", otherUserId)));
 
         return user.getFriends().stream()
                 .filter(otherUser.getFriends()::contains)
