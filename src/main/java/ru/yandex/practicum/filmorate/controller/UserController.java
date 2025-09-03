@@ -1,25 +1,28 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Контроллер для работы с пользователями
- * REST API для создания, обновления и получения пользователей
+ * REST API для создания, обновления, получения и удаления пользователей
  */
 @Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final UserService userService;
 
     /**
      * Создание нового пользователя
@@ -31,18 +34,7 @@ public class UserController {
     @PostMapping
     public User createUser(@RequestBody User user) throws ValidationException {
         log.info("Получен запрос на создание пользователя: {}", user.getLogin());
-
-        validateUser(user);
-
-        // Если имя пустое, используем логин
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-
-        user.setId(getNextId());
-        users.put(user.getId(), user);
-        log.info("Пользователь успешно создан с id: {}", user.getId());
-        return user;
+        return userService.createUser(user);
     }
 
     /**
@@ -55,31 +47,7 @@ public class UserController {
     @PutMapping
     public User updateUser(@RequestBody User user) throws ValidationException {
         log.info("Получен запрос на обновление пользователя с id: {}", user.getId());
-
-        // Проверка ID
-        if (user.getId() == null) {
-            log.error("Ошибка обновления пользователя: Id должен быть указан");
-            throw new ValidationException("Id должен быть указан");
-        }
-
-        // Проверка существования пользователя
-        if (!users.containsKey(user.getId())) {
-            log.error("Ошибка обновления пользователя: Пользователь с id = {} не найден", user.getId());
-            throw new ValidationException(String.format("Пользователь с id = %d не найден", user.getId()));
-        }
-
-        // Валидация
-        validateUser(user);
-
-        // Если имя пустое, используем логин
-        if (user.getName() == null || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-
-        // Обновляем пользователя в хранилище
-        users.put(user.getId(), user);
-        log.info("Пользователь с id {} успешно обновлен", user.getId());
-        return user;
+        return userService.updateUser(user);
     }
 
     /**
@@ -89,59 +57,91 @@ public class UserController {
      */
     @GetMapping
     public Collection<User> getAllUsers() {
-        log.info("Получен запрос на получение всех пользователей. Количество пользователей: {}", users.size());
-        return users.values();
+        log.info("Получен запрос на получение всех пользователей");
+        return userService.getAllUsers();
     }
 
     /**
-     * Валидация пользователя
-     * Проверяет корректность всех полей пользователя
+     * Получение пользователя по ID
      *
-     * @param user пользователь для валидации
-     * @throws ValidationException если пользователь не прошел валидацию
+     * @param id идентификатор пользователя
+     * @return пользователь
      */
-    private void validateUser(User user) throws ValidationException {
-        // Проверка email
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            log.warn("Валидация не пройдена: Email не может быть пустым");
-            throw new ValidationException("Email не может быть пустым");
-        }
-        if (!user.getEmail().contains("@")) {
-            log.warn("Валидация не пройдена: Email должен содержать символ @");
-            throw new ValidationException("Email должен содержать символ @");
-        }
-
-        // Проверка логина
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            log.warn("Валидация не пройдена: Логин не может быть пустым");
-            throw new ValidationException("Логин не может быть пустым");
-        }
-        if (user.getLogin().contains(" ")) {
-            log.warn("Валидация не пройдена: Логин не должен содержать пробелы");
-            throw new ValidationException("Логин не должен содержать пробелы");
-        }
-
-        // Проверка даты рождения
-        if (user.getBirthday() == null) {
-            log.warn("Валидация не пройдена: Дата рождения должна быть указана");
-            throw new ValidationException("Дата рождения должна быть указана");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.warn("Валидация не пройдена: Дата рождения не может быть в будущем");
-            throw new ValidationException("Дата рождения не может быть в будущем");
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id) {
+        log.info("Получен запрос на получение пользователя с id: {}", id);
+        Optional<User> user = userService.getUserById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            log.warn("Пользователь с id {} не найден", id);
+            throw new IllegalArgumentException("Пользователь с id = " + id + " не найден");
         }
     }
 
     /**
-     * Метод для генерации следующего уникального ID
+     * Удаление пользователя по ID
      *
-     * @return следующий доступный ID
+     * @param id идентификатор пользователя для удаления
+     * @return статус 204 No Content при успешном удалении
      */
-    private int getNextId() {
-        return users.keySet()
-                .stream()
-                .mapToInt(Integer::intValue)
-                .max()
-                .orElse(0) + 1;
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Integer id) {
+        log.info("Получен запрос на удаление пользователя с id: {}", id);
+        boolean deleted = userService.deleteUser(id);
+        if (!deleted) {
+            log.warn("Попытка удаления несуществующего пользователя с id: {}", id);
+            throw new IllegalArgumentException("Пользователь с id = " + id + " не найден");
+        }
+    }
+
+    /**
+     * Добавление в друзья
+     *
+     * @param id       идентификатор пользователя
+     * @param friendId идентификатор друга
+     */
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Получен запрос на добавление пользователя {} в друзья к пользователю {}", friendId, id);
+        userService.addFriend(id, friendId);
+    }
+
+    /**
+     * Удаление из друзей
+     *
+     * @param id       идентификатор пользователя
+     * @param friendId идентификатор друга
+     */
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        log.info("Получен запрос на удаление пользователя {} из друзей пользователя {}", friendId, id);
+        userService.removeFriend(id, friendId);
+    }
+
+    /**
+     * Получение списка друзей пользователя
+     *
+     * @param id идентификатор пользователя
+     * @return список друзей
+     */
+    @GetMapping("/{id}/friends")
+    public List<User> getUserFriends(@PathVariable Integer id) {
+        log.info("Получен запрос на получение списка друзей пользователя с id: {}", id);
+        return userService.getUserFriends(id);
+    }
+
+    /**
+     * Получение списка общих друзей
+     *
+     * @param id      идентификатор пользователя
+     * @param otherId идентификатор другого пользователя
+     * @return список общих друзей
+     */
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+        log.info("Получен запрос на получение общих друзей пользователей {} и {}", id, otherId);
+        return userService.getCommonFriends(id, otherId);
     }
 }
