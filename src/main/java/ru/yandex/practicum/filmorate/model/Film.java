@@ -42,4 +42,14 @@ public class Film extends BaseEntity {
      * Множество ID пользователей, которые поставили лайк фильму.
      */
     Set<Integer> likes = new HashSet<>();
+
+    /**
+     * Жанры фильма
+     */
+    Set<Genre> genres = new HashSet<>();
+
+    /**
+     * Рейтинг MPA
+     */
+    MpaRating mpa;
 }
