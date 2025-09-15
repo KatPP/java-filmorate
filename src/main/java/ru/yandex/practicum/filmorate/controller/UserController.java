@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -127,7 +126,7 @@ public class UserController {
      * @return список друзей
      */
     @GetMapping("/{id}/friends")
-    public List<User> getUserFriends(@PathVariable Integer id) {
+    public Collection<User> getUserFriends(@PathVariable Integer id) {
         log.info("Получен запрос на получение списка друзей пользователя с id: {}", id);
         return userService.getUserFriends(id);
     }
@@ -140,7 +139,7 @@ public class UserController {
      * @return список общих друзей
      */
     @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
+    public Collection<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         log.info("Получен запрос на получение общих друзей пользователей {} и {}", id, otherId);
         return userService.getCommonFriends(id, otherId);
     }

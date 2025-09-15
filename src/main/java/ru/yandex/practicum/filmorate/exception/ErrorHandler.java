@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    /**
+     * Обрабатывает исключения валидации.
+     *
+     * @param e исключение валидации
+     * @return объект с описанием ошибки
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationException(final ValidationException e) {
@@ -17,6 +23,12 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации", e.getMessage());
     }
 
+    /**
+     * Обрабатывает исключения "не найдено".
+     *
+     * @param e исключение "не найдено"
+     * @return объект с описанием ошибки
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
@@ -24,6 +36,12 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка запроса", e.getMessage());
     }
 
+    /**
+     * Обрабатывает все остальные исключения.
+     *
+     * @param e исключение
+     * @return объект с описанием ошибки
+     */
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {
