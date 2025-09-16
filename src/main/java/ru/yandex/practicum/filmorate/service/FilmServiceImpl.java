@@ -54,7 +54,7 @@ public class FilmServiceImpl implements FilmService {
     public Film updateFilm(Film film) throws ValidationException, NotFoundException {
         validateFilm(film);
         if (!filmRepository.existsById(film.getId())) {
-            throw new NotFoundException("Фильм с id = " + film.getId() + " не найден");
+            throw new NotFoundException(String.format("Фильм с id = %d не найден", film.getId()));
         }
         return filmRepository.update(film);
     }
@@ -118,7 +118,7 @@ public class FilmServiceImpl implements FilmService {
         // Проверка MPA
         if (film.getMpa() != null && film.getMpa().getId() != null) {
             if (!mpaRatingRepository.findById(film.getMpa().getId()).isPresent()) {
-                throw new NotFoundException("Рейтинг MPA с id = " + film.getMpa().getId() + " не найден");
+                throw new NotFoundException(String.format("Рейтинг MPA с id = %d не найден", film.getMpa().getId()));
             }
         }
 
@@ -126,7 +126,7 @@ public class FilmServiceImpl implements FilmService {
         if (film.getGenres() != null) {
             for (Genre genre : film.getGenres()) {
                 if (genre.getId() != null && !genreRepository.findById(genre.getId()).isPresent()) {
-                    throw new NotFoundException("Жанр с id = " + genre.getId() + " не найден");
+                    throw new NotFoundException(String.format("Жанр с id = %d не найден", genre.getId()));
                 }
             }
         }
@@ -142,10 +142,10 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void addLike(Integer filmId, Integer userId) {
         if (!filmRepository.existsById(filmId)) {
-            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
+            throw new NotFoundException(String.format("Фильм с id = %d не найден", filmId));
         }
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
 
         likeRepository.addLike(filmId, userId);
@@ -161,10 +161,10 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public void removeLike(Integer filmId, Integer userId) {
         if (!filmRepository.existsById(filmId)) {
-            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
+            throw new NotFoundException(String.format("Фильм с id = %d не найден", filmId));
         }
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
 
         likeRepository.removeLike(filmId, userId);

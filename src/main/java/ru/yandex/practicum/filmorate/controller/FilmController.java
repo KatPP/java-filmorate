@@ -75,7 +75,7 @@ public class FilmController {
             return film.get();
         } else {
             log.warn("Фильм с id {} не найден", id);
-            throw new IllegalArgumentException("Фильм с id = " + id + " не найден");
+            throw new IllegalArgumentException(String.format("Фильм с id = %d не найден", id));
         }
     }
 
@@ -92,7 +92,7 @@ public class FilmController {
         boolean deleted = filmService.deleteFilm(id);
         if (!deleted) {
             log.warn("Попытка удаления несуществующего фильма с id: {}", id);
-            throw new IllegalArgumentException("Фильм с id = " + id + " не найден");
+            throw new IllegalArgumentException(String.format("Фильм с id = %d не найден", id));
         }
     }
 

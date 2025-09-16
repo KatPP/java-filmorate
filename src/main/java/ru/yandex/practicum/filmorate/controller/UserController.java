@@ -74,7 +74,7 @@ public class UserController {
             return user.get();
         } else {
             log.warn("Пользователь с id {} не найден", id);
-            throw new IllegalArgumentException("Пользователь с id = " + id + " не найден");
+            throw new IllegalArgumentException(String.format("Пользователь с id = %d не найден", id));
         }
     }
 
@@ -91,7 +91,7 @@ public class UserController {
         boolean deleted = userService.deleteUser(id);
         if (!deleted) {
             log.warn("Попытка удаления несуществующего пользователя с id: {}", id);
-            throw new IllegalArgumentException("Пользователь с id = " + id + " не найден");
+            throw new IllegalArgumentException(String.format("Пользователь с id = %d не найден", id));
         }
     }
 

@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user) throws ValidationException {
         validateUser(user);
         if (!userRepository.existsById(user.getId())) {
-            throw new NotFoundException("Пользователь с id = " + user.getId() + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", user.getId()));
         }
         return userRepository.update(user);
     }
@@ -120,10 +120,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addFriend(Integer userId, Integer friendId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
         if (!userRepository.existsById(friendId)) {
-            throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", friendId));
         }
 
         Friendship friendship = new Friendship();
@@ -144,10 +144,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void removeFriend(Integer userId, Integer friendId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
         if (!userRepository.existsById(friendId)) {
-            throw new NotFoundException("Пользователь с id = " + friendId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", friendId));
         }
 
         friendshipRepository.removeFriendship(userId, friendId);
@@ -163,7 +163,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> getUserFriends(Integer userId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
 
         Collection<Integer> friendIds = friendshipRepository.getUserFriendsIds(userId);
@@ -184,10 +184,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> getCommonFriends(Integer userId, Integer otherId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", userId));
         }
         if (!userRepository.existsById(otherId)) {
-            throw new NotFoundException("Пользователь с id = " + otherId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с id = %d не найден", otherId));
         }
 
         Collection<Integer> commonFriendIds = friendshipRepository.getCommonFriendsIds(userId, otherId);
